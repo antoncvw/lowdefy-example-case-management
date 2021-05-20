@@ -1,0 +1,31 @@
+- name: 16 Skeen Boulevard - Bedfordview
+  address: |
+    16 Skeen Boulevard
+    Bedfordview
+  region: 
+    Gauteng
+  status: 
+    Under Development
+  type: 
+    Residential 
+  Owner:
+    Blend Property Group 
+  GLA: 
+    Less than 10 000
+name: Whirlpool
+  address: |
+    15E Riley Road, 
+    Riley Office Park
+    Bedfordview EXT 328
+  region: 
+    Gauteng
+  status: 
+    Under Development
+  type: 
+    Commecial 
+  parking : 
+    85   
+  Owner:
+    Blend Property Group 
+  GLA: 
+    Less than 10 000

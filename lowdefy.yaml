@@ -11,9 +11,17 @@ connections:
       databaseName: example-case-management
       collection: tickets
       write: true
+  - id: properties
+    type: MongoDBCollection
+    properties: 
+      databaseUri:
+        _secret: acvanwyk
+      databaseName: TOLMAYVANWYK
+      collection: GRENTON_PROPERTIES
+      write: true
 
 menus:
-  - id: default
+  - id: blockid
     links:
       - id: tickets
         type: MenuLink
@@ -26,7 +34,13 @@ menus:
         pageId: new-ticket
         properties:
           icon: AlertOutlined
-          title: New Ticket
+          title: Lodge Building Ticket
+      - id: covidmenu
+        type: MenuLink
+        pageId: covidcapture
+        properties:
+          icon: AlertOutlined
+          title: Covid Capture Form
 
 global:
   statuses:
@@ -76,3 +90,5 @@ global:
 pages:
   - _ref: tickets.yaml
   - _ref: new-ticket.yaml
+  - _ref: visitors-covid-form.yaml
+

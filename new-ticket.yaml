@@ -1,7 +1,7 @@
 id: new-ticket
 type: PageHeaderMenu
 properties:
-  title: New Ticket
+  title: Tenant Request
   content:
     style:
       background: '#f5f5f5'
@@ -84,7 +84,7 @@ areas:
               properties:
                 height: 30px
             properties:
-              content: New query
+              content: Tenant Ticket Request
               level: 2
           - id: name
             type: TextInput
@@ -97,20 +97,6 @@ areas:
             properties:
               title: Name
               size: large
-          - id: company
-            type: AutoComplete
-            required: true
-            loading:
-              type: SkeletonInput
-              properties:
-                size: large
-            properties:
-              title: Company
-              size: large
-              options:
-                - Company, Inc.
-                - Distribution Logistics
-                - GHT Consulting
           - id: phone
             type: TextInput
             required: true
@@ -120,7 +106,23 @@ areas:
                 size: large
             properties:
               title: Phone
+              size: large    
+          - id: company
+            type: AutoComplete
+            required: true
+            loading:
+              type: SkeletonInput
+              properties: 
+                size: large
+            properties:
+              title: Building
               size: large
+              options:
+                - 16 Skeen Boulevard, Bedfordview
+                - Whirlpool- Bedfordview
+                - Babcock - Bedfordview
+              placeholder: Select your requested building
+          
           - id: type
             type: Selector
             required: true
@@ -129,13 +131,13 @@ areas:
               properties:
                 size: large
             properties:
-              title: Ticket type
+              title: Tenant Enquiry
               size: large
               options:
-                - Invoices
-                - Late Delivery
-                - Return Deposit
-                - Other
+                - Repairs / Maintenance
+                - Statement Request
+                - Property Report
+          
           - id: ticket_description
             type: TextArea
             required: true
@@ -144,7 +146,7 @@ areas:
               properties:
                 inputHeight: 80px
             properties:
-              title: Ticket description
+              title: Additional notes
               size: large
           - id: submit
             type: Button
