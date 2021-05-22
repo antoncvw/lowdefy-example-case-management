@@ -34,13 +34,25 @@ menus:
         pageId: new-ticket
         properties:
           icon: AlertOutlined
-          title: Lodge Building Ticket
+          title: Lodge New Ticket
       - id: covidmenu
         type: MenuLink
         pageId: covidcapture
         properties:
           icon: AlertOutlined
           title: Covid Capture Form
+      - id: newtenant
+        type: MenuLink
+        pageId: new-tenant
+        properties:
+          icon: AlertOutlined
+          title: Load New User
+      - id: newproperty
+        type: MenuLink
+        pageId: new-property
+        properties:
+          icon: AlertOutlined
+          title: Load New Property
 
 global:
   statuses:
@@ -91,4 +103,7 @@ pages:
   - _ref: tickets.yaml
   - _ref: new-ticket.yaml
   - _ref: visitors-covid-form.yaml
+  - _ref: new-tenant.yaml
+  - _ref: new-property.yaml
+
 

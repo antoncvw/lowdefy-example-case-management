@@ -1,0 +1,133 @@
+id: new-tenant
+type: PageHeaderMenu
+properties:
+  title: Load New User
+  content:
+    style:
+      background: '#f5f5f5'
+blocks:
+  - id: content_box
+    type: Box
+    style:  
+      maxWidth: 660
+      padding: 30px 30px 60px 30px
+      minHeight: 90vh
+      background: '#fff'
+    layout:
+      contentGutter: 20
+    blocks:
+      - id: tenant title
+        type: Title
+        style:
+          textAlign: center
+          paddingTop: 20
+        properties:
+          content: Add a new user to your property portfolio 
+          level: 1  
+      - id: tenant intro page
+        type: Title
+        style:
+          textAlign: center
+          paddingTop: 20
+        properties:
+          content: Welcome to the Grenton Facilities Management Tool. Please fill out the following form to provide us with the necessary information we need create your personal property dashboard. From there we will generate your unique user code. You will need your user code to gain access to the platform.
+          level: 4
+      - id: new tenant name 
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Name and Surname / Company Name 
+          size: large 
+      - id: RSA ID / PASSPORT NUMBER / Company Registration  
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: RSA ID / Company Registration 
+          size: large         
+      - id: Contact Number 
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Contact Number
+          size: large
+      - id: email  
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Email Address
+          size: large
+      - id: User type
+        type: AutoComplete
+        required: true
+        loading:
+          type: SkeletonInput
+          properties: 
+            size: large
+        properties:
+          title: User Type
+          size: large
+          options:
+                - Property Owner
+                - Tenant
+      - id: Building type
+        type: AutoComplete
+        required: true
+        loading:
+          type: SkeletonInput
+          properties: 
+            size: large
+        properties:
+          title: Building Type
+          size: large
+          options:
+                - Residential 
+                - Commercial
+                - Retail 
+                - Industrial 
+          placeholder: Please select your building type 
+      - id: province
+        type: Selector
+        properties:
+          title: Province
+          options:
+            - Gauteng
+            - Free State
+            - Eastern Cape
+            - Western Cape
+            - Northern Cape 
+            - Limpopo
+            - Mpumalanga 
+            - North West
+            - KwaZulu Natal 
+      - id: municipality 
+        type: Selector  
+        properties:
+          title: Municipality 
+          options:
+            _log:
+              _array.map:
+                on:
+                  _array.filter:
+                    on:
+                      _ref: regions.yaml
+                    callback:
+                      _function:
+                        __eq:
+                          - __state: province 
+                          - __args: 0.province
+                callback: 
+                  _function: 
+                    __args: 0.municipality
+      - id: building account number  
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Municipal Account Number
+          size: large
+                  
+      
+                
+
+            
+              
+
