@@ -31,4 +31,108 @@ blocks:
           paddingTop: 20
         properties:
           content: Please fill out the following form to provide us with the necassary information we need create your personal property dashbaord
-          level: 4 
+          level: 4
+      - id: Property Name 
+        type: TextInput
+        required: true 
+        properties:
+          title: Property Name 
+          size: large
+      - id: Property Type
+        type: AutoComplete
+        required: true
+        loading:
+          type: SkeletonInput
+          properties: 
+            size: large      
+        properties:
+          title: Property Type
+          size: large
+          options:
+                - Residential 
+                - Commercial
+                - Retail 
+                - Industrial
+                - Vacant 
+          placeholder: Please select your building type
+      - id: Property Address 
+        type: TextInput
+        required: true  
+        properties:
+          title: Property Street Address 
+          size: large      
+      - id: province
+        type: Selector
+        properties:
+          title: Province
+          options:
+            - Gauteng
+            - Free State
+            - Eastern Cape
+            - Western Cape
+            - Northern Cape 
+            - Limpopo
+            - Mpumalanga 
+            - North West
+            - KwaZulu Natal 
+      - id: municipality 
+        type: Selector  
+        properties:
+          title: Municipality 
+          options:
+            _log:
+              _array.map:
+                on:
+                  _array.filter:
+                    on:
+                      _ref: regions.yaml
+                    callback:
+                      _function:
+                        __eq:
+                          - __state: province 
+                          - __args: 0.province
+                callback: 
+                  _function: 
+                    __args: 0.municipality
+      - id: building account number  
+        type: TextInput
+        required: true 
+        properties:
+          title: Municipal Account Number
+          size: large
+          span: 12 
+      - id: building muncipal pin number  
+        type: TextInput
+        required: true 
+        properties:
+          title: Municipal Account PIN Number
+          size: large 
+          span: 12
+      - id: Property GLA
+        type: TextInput
+        required: true  
+        properties:
+          title: Property GLA 
+          size: large
+      - id: submit
+        type: Button
+        style:
+          marginTop: 8
+        loading:
+          type: SkeletonButton
+          properties:
+            size: large
+        properties:
+          title: Submit
+          size: large
+          block: true
+        events:
+          # Validate inputs, insert the ticket and reset when the submit button is clicked
+          onClick:
+            - id: validate
+              type: Validate
+            - id: submit
+              type: Request
+              params: insert_ticket
+            - id: reset
+              type: Reset

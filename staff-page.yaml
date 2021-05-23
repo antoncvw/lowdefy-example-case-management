@@ -1,0 +1,469 @@
+id: staff-page
+type: PageHeaderMenu
+properties:
+  title: Staff
+layout:
+  contentGutter: 16
+  contentJustify: center
+blocks:
+  - id: welcome_card
+    type: Card
+    layout:
+      size: 1200px
+    blocks:
+      - id: page_title
+        type: Title
+        properties:
+          content: Staff Attendance Tools
+      - id: page_descrip
+        type: Paragraph
+        properties:
+          content: Welcome to the Staff Attendance Register. Use the tabs below to navigate to the Standard Attendance Register or COVID-19
+          level: 4  
+  - id: search_card
+    type: Card
+    layout:
+      contentGutter: 6
+      size: 1200px
+    properties:
+      title: Search & Filter Card      
+    requests:
+      - id: get_position_filter_options
+        type: MongoDBAggregation
+        connectionId: staff_register
+        properties:
+          pipeline:
+            - $match:
+                archived:
+                  $ne: true
+            - $group: 
+                _id: '$Position'
+            - $project:
+                _id: 0
+                label: '$_id'
+                value: '$_id'
+
+      - id: get_staff_dropdown_options
+        type: MongoDBAggregation
+        connectionId: staff_register
+        properties:
+          pipeline:
+            - $match:
+                archived:
+                  $ne: true
+            - $match:
+                  $expr:
+                      $or:
+                        - $eq:
+                            - $Position
+                            - _state: position_selector_filter
+                        - $eq:
+                            - _state: position_selector_filter
+                            - null 
+            - $project:
+                _id: 0
+                label: '$Employee Name'
+                value: '$_id'
+    areas:
+      extra:
+        blocks:
+          - id: open_drawer_button
+            type: Button
+            properties:
+              title: Open Staff Book
+              type: Primary
+            actions:
+              onClick: 
+                - id: toggle_staff_book_drawer
+                  type: CallMethod
+                  params:
+                    blockId: staff_book_drawer
+                    method: toggleOpen
+      content:
+        blocks:  
+          - id: submit_form.staff_id
+            type: Selector
+            required: true
+            layout:
+              span: 12
+            properties:
+              title: Search Staff Name
+              showSearch: true
+              placeholder: Staff name...
+              options:
+                _request: get_staff_dropdown_options 
+          - id: position_selector_filter
+            type: Selector
+            layout:
+              span: 12
+            properties:
+              title: Filter by Position
+              showSearch: true
+              placeholder: Position...
+              options:
+                _request: get_position_filter_options
+            actions:
+              onChange:
+                - id: fetch_staff
+                  type: Fetch
+                  params: get_staff_dropdown_options
+
+  - id: staff_book_drawer
+    type: Drawer
+    layout:
+      contentGutter: 8
+    properties:
+      width: 380px
+      zIndex: 500
+    blocks:
+      - id: drawer.title
+        type: Title
+        properties:
+          content:  Staff Book
+          level: 4
+      - id: drawer.staff_id
+        type: Selector
+        properties:
+          showSearch: true 
+          title: Search staff
+          options:
+            _request: get_staff_book_staff 
+        actions:
+          onChange:
+            - id: empty_staff_details
+              type: SetState
+              params:
+                drawer.staff_details: null
+            - id: fetch_staff_details
+              type: Fetch
+              params: get_staff_details
+            - id: set_staff_details
+              type: SetState
+              params:
+                drawer.staff_details:
+                  _request: get_staff_details
+      - id: drawer_description
+        type: Descriptions
+        properties:
+          bordered: true
+          layout: vertical
+          column: 1
+          size: small
+          items:
+            _state: drawer.staff_details
+      - id: drawer.add_button
+        type: Button
+        properties:
+          title: Add
+          icon: PlusCircleOutlined
+          block: true
+        actions:
+          onClick:
+            - id: open_edit_drawer
+              type: CallMethod
+              params:
+                blockId: add_staff_book_modal
+                method: toggleOpen
+      - id: drawer.edit_button
+        type: Button
+        visible:
+          _not:
+            _eq:
+              - _state: drawer.staff_id
+              - null
+        properties:
+          title: Edit
+          icon: EditOutlined
+          block: true
+        actions:
+          onClick:
+            - id: set_edit_staff_form
+              type: SetState
+              params:
+                edit_staff_book:
+                  _state: drawer.staff_details
+            - id: open_edit_drawer
+              type: CallMethod
+              params:
+                blockId: edit_staff_book_modal
+                method: toggleOpen
+      - id: drawer.delete_button
+        type: Button
+        visible:
+          _not:
+            _eq:
+              - _state: drawer.staff_id
+              - null
+        properties:
+          title: Delete
+          icon: DeleteOutlined
+          type: danger
+          block: true
+
+  - id: add_staff_book_modal
+    type: Modal
+    actions:
+      onOK:
+      mutations:
+        - id: mongo_insert_new_doc
+          type: MongoDBInsertOne
+          connectionID: staff_register
+          properties:
+            doc:
+              _state: .edit_staff_book
+    properties:
+      zIndex: 1000
+    blocks:
+      - id: edit_staff_book.construction_level_selector
+        type: Selector
+        properties:
+          title: Employee Category
+          options:
+            - Artisan
+            - General Worker
+            - Speciality Worker
+      - id: edit_staff_book.position_selector
+        type: Selector
+        properties:
+          title: Position
+          options:
+            - Director
+            - Manager
+            - Technical Director
+            - General Worker
+            - Formwork
+            - General Worker
+            - Plaster
+            - Roofing
+            - Electrical
+            - Plumber
+            - Motorized Mixer
+            - Concrete Pump
+            - Formwork Operator
+            - Plaster Machine
+      - id: edit_staff_book.Employee Name
+        type: TextInput
+        properties:
+          title: Name
+      - id: edit_staff_book.Construction Level
+        type: TextInput
+        properties:
+          title: Construction Level
+      - id: edit_staff_book.Department
+        type: TextInput
+        properties:
+          title: Department
+      - id: edit_staff_book.Employee Code
+        type: TextInput
+        properties:
+          title: Code
+
+
+  - id: edit_staff_book_modal
+    type: Modal
+    actions:
+      onOK:
+      mutations:
+        - id: mongo_insert_update_doc
+          type: MongoDBUpdateOne
+          connectionID: staff_register
+          properties:
+            doc:
+              _state: edit_staff_book
+    properties:
+      zIndex: 1000
+    blocks:
+      - id: edit_staff_book.construction_level_selector
+        type: Selector
+        properties:
+          title: Employee Category
+          options:
+            - Artisan
+            - General Worker
+            - Speciality Worker
+      - id: edit_staff_book.position_selector
+        type: Selector
+        properties:
+          title: Position
+          options:
+            - Director
+            - Manager
+            - Technical Director
+            - General Worker
+            - Formwork
+            - General Worker
+            - Plaster
+            - Roofing
+            - Electrical
+            - Plumber
+            - Motorized Mixer
+            - Concrete Pump
+            - Formwork Operator
+            - Plaster Machine
+      - id: edit_staff_book.Employee Name
+        type: TextInput
+        properties:
+          title: Name
+      - id: edit_staff_book.Construction Level
+        type: TextInput
+        properties:
+          title: Construction Level
+      - id: edit_staff_book.Department
+        type: TextInput
+        properties:
+          title: Department
+      - id: edit_staff_book.Employee Code
+        type: TextInput
+        properties:
+          title: Code
+
+            # validate
+            # Update one, upsert true
+
+  - id: input_card
+    type: Card
+    properties:
+      title: Data Input Tile
+    layout:
+      size: 1200px
+    blocks:
+      - id: submit_form.date
+        type: DateTimeSelector
+        properties:
+          title: Select the Date
+      - id: seperator3
+        type: Divider              
+      - id: submit_form.status
+        type: RadioSelector
+        properties:
+          label:
+            colon: true             
+          title: Attendance Status
+          options:
+            - Present
+            - Absent
+            - On Leave
+            - Public Holiday
+            - Other
+      - id: seperator2
+        type: Divider                
+      - id: submit_form.register_comment
+        type: TextArea
+        properties:
+          label:
+            colon: true
+          title: Comments & Notes
+      - id: seperator1
+        type: Divider
+      - id: submit_form.covid19.temperture
+        type: NumberInput
+        properties:
+          title: Temperature
+        layout:
+          span: 6
+      - id: seperator1
+        type: Divider              
+      - id: submit_form.covid19.showing_symptoms
+        type: Switch
+        properties:
+          title: Showing Symptoms
+          checkedIcon: CheckOutlined
+          uncheckedIcon: CloseOutlined          
+      - id: seperator111
+        type: Divider
+      - id: submit_button_box
+        type: Box
+        layout:
+          contentDirection: row-reverse
+          contentGutter: 8
+        blocks:     
+          - id: submit_attendance_record
+            type: Button
+            mutations:
+              - id: insert_mongodb
+                type: MongoDBInsertOne
+                connectionId: staff_attendance
+                properties:
+                  doc:
+                    _get:
+                      key: '0'
+                      from:
+                        _mql_aggregate:
+                          pipeline:
+                            - $addFields:
+                                timestamp:
+                                  _date: now
+                                capture_user_id:
+                                  _user: id
+                          on:
+                            -  _state: submit_form
+            layout:
+              align: middle
+              size: auto
+            properties:
+              icon: CheckCircleOutlined
+              type: primary
+              title: Submit
+              shape: round
+            actions:
+              onClick:
+                - id: validate
+                  type: Validate
+                - id: insert_mongodb
+                  type: Mutate
+                  params: insert_mongodb
+                - id: reset
+                  type: Reset
+                - id: scroll_to_top
+                  type: ScrollTo
+                  params:
+                    blockId: search_card
+          - id: reset_button
+            type: Button
+            layout:
+              size: auto
+            properties:
+              icon: ReloadOutlined
+              type: default
+              title: Reset
+              shape: round
+            actions:
+              onClick:
+                - id: reset
+                  type: Reset
+                - id: scroll_to_top
+                  type: ScrollTo
+                  params:
+                    blockId: search_card
+
+  - id: pbi_dash_card
+    type: Collapse
+    layout:
+      align: middle
+      size: 1200px
+    properties:
+      panels:
+        - disbaled: false
+          extraKey: content_one_extra
+          key: content_one
+          title: Analytics Dashboard
+    areas:
+      content_one:
+        blocks:
+          - id: pbi_dash
+            type: Html
+            layout:
+              align: middle
+            properties:
+              html: |
+                <iframe 
+                  id=""ytplayer_yaml_video"
+                  type="text/html"
+                  width="1380" 
+                  height="800"
+                  src="https://app.powerbi.com/view?r=eyJrIjoiNGZmYzljNGUtMGM1Zi00MTRhLTgyNjQtMWRlMWVmYTllMzRjIiwidCI6Ijc2MDcxN2MzLWNjNDktNDVmMS05ZTE5LTcwZjM2YmFkYWQ4ZCJ9" 
+                  allowFullScreen="true""
+                  
+                  frameborder="12">
+                </iframe>
+

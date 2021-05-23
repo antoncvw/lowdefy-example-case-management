@@ -43,9 +43,6 @@ requests:
                 type: integer
                 max: 999999
                 min: 100000
-
-
-
 areas:
   header:
     blocks:
@@ -69,12 +66,11 @@ areas:
   content:
     justify: center
     blocks:
-      # This box limits the width of the content to 800px
       - id: max_width
         type: Box
         layout:
-          size: 800px # Initial width of the box
-          shrink: 1 # Allow the box to shrink if available space on screen is less than 800px
+          size: 800px 
+          shrink: 1 
           contentGutter: 8
         blocks:
           - id: ticket_title
@@ -90,14 +86,13 @@ areas:
             type: TextInput
             required: true
             loading:
-              # Set loading properties, since large inputs are used, and the default loading is too small
               type: SkeletonInput
               properties:
                 size: large
             properties:
               title: Name
               size: large
-          - id: phone
+          - id: User ID
             type: TextInput
             required: true
             loading:
@@ -105,7 +100,7 @@ areas:
               properties:
                 size: large
             properties:
-              title: Phone
+              title: User ID
               size: large    
           - id: company
             type: AutoComplete
@@ -122,7 +117,6 @@ areas:
                 - Whirlpool- Bedfordview
                 - Babcock - Bedfordview
               placeholder: Select your requested building
-          
           - id: type
             type: Selector
             required: true
@@ -137,17 +131,6 @@ areas:
                 - Repairs / Maintenance
                 - Statement Request
                 - Property Report
-          
-          - id: ticket_description
-            type: TextArea
-            required: true
-            loading:
-              type: SkeletonInput
-              properties:
-                inputHeight: 80px
-            properties:
-              title: Additional notes
-              size: large
           - id: submit
             type: Button
             style:
@@ -161,7 +144,6 @@ areas:
               size: large
               block: true
             events:
-              # Validate inputs, insert the ticket and reset when the submit button is clicked
               onClick:
                 - id: validate
                   type: Validate

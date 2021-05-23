@@ -1,0 +1,94 @@
+id: new-user-welcome
+type: PageHeaderMenu
+properties:
+  title: Load New User
+  content:
+    style:
+      background: '#f5f5f5' 
+blocks:
+  - id: content_box
+    type: Box
+    style:  
+      maxWidth: 660
+      padding: 30px 30px 60px 30px
+      minHeight: 90vh
+      background: '#fff'
+    layout:
+      contentGutter: 20
+    blocks:
+      - id: tenant title
+        type: Title
+        style:
+          textAlign: center
+          paddingTop: 20
+        properties:
+          content: Grenton Facilities Management
+          level: 1  
+          span: 15
+      - id: tenant intro page
+        type: Title
+        style:
+          textAlign: center
+          paddingTop: 20
+        properties:
+          content: Welcome to the Grenton Facilities Management Tool. Please fill out the following form to provide us with the necessary information we need create your personal property dashboard. From there we will generate your unique user code. You will need your user code to gain access to the platform.
+          level: 4
+      - id: User type
+        type: AutoComplete
+        required: true
+        loading:
+          type: SkeletonInput
+          properties: 
+            size: large
+        properties:
+          title: User Type
+          size: large
+          options:
+                - Property Owner
+                - Tenant
+      - id: new tenant name 
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Name and Surname
+          size: large
+      - id: RSA ID / PASSPORT NUMBER / Company Registration  
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: RSA ID Number 
+          size: large         
+      - id: Contact Number 
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Contact Number
+          size: large
+      - id: email  
+        type: TextInput
+        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        properties:
+          title: Email Address
+          size: large
+      - id: submit
+        type: Button
+        style:
+          marginTop: 8
+        loading:
+          type: SkeletonButton
+          properties:
+            size: large
+        properties:
+          title: Submit
+          size: large
+          block: true
+        events:
+          # Validate inputs, insert the ticket and reset when the submit button is clicked
+          onClick:
+            - id: validate
+              type: Validate
+            - id: submit
+              type: Request
+              params: insert_ticket
+            - id: reset
+              type: Reset

@@ -35,7 +35,6 @@ blocks:
         properties:
           content: Your input is highly valued and your response remains confidential, your screeening information is nessacary to grant access to the building
           level: 4
-      # The first input field will manage the name field in the page context state variable.
       - id: selection
         type: ButtonSelector
         required: true
@@ -47,25 +46,25 @@ blocks:
             - Tenant Access
       - id: name 
         type: TextInput
-        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        required: true 
         properties:
           title: Name & Surname
           size: large
       - id: RSA ID / PASSPORT NUMBER 
         type: TextInput
-        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        required: true 
         properties:
           title: RSA ID / PASSPORT NUMBER 
           size: large  
       - id: Contact Number 
         type: TextInput
-        required: true # We indicate that some fields are required, later we will validate our input before submitting the data to the server. 
+        required: true 
         properties:
           title: Contact Number
           size: large      
       - id: company
         type: TextInput
-        required: true
+        required: false
         properties:
           title: Company Name
           size: large
@@ -101,7 +100,6 @@ blocks:
           size: large
           block: true
         events:
-          # Validate inputs, insert the ticket and reset when the submit button is clicked
           onClick:
             - id: validate
               type: Validate
