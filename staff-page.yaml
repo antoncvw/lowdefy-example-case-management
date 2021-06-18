@@ -42,7 +42,6 @@ blocks:
                 _id: 0
                 label: '$_id'
                 value: '$_id'
-
       - id: get_staff_dropdown_options
         type: MongoDBAggregation
         connectionId: staff_register
@@ -107,7 +106,6 @@ blocks:
                 - id: fetch_staff
                   type: Fetch
                   params: get_staff_dropdown_options
-
   - id: staff_book_drawer
     type: Drawer
     layout:

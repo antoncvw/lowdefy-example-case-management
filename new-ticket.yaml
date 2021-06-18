@@ -143,7 +143,7 @@ areas:
               title: Submit
               size: large
               block: true
-            events:
+            events: 
               onClick:
                 - id: validate
                   type: Validate
