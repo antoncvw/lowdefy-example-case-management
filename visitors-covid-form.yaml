@@ -1,7 +1,7 @@
 id: covidcapture
 type: PageHeaderMenu
 properties:
-  title: COVID CAPTURE FORM 
+  title: VISITOR COVID 19 CAPTURE FORM 
   content:
     style:
       background: '#f5f5f5'
@@ -25,7 +25,7 @@ blocks:
           textAlign: center
           paddingTop: 20
         properties:
-          content: Covid-19 Screening Form
+          content: Covid-19 Self Declaration Form
           level: 1
       - id: intro
         type: Title
@@ -35,20 +35,17 @@ blocks:
         properties:
           content: Your input is highly valued and your response remains confidential, your screeening information is nessacary to grant access to the building
           level: 4
-      - id: selection
-        type: ButtonSelector
-        required: true
-        properties:
-          title: Please select
-          size: large
-          options:
-            - Visitor
-            - Tenant Access
       - id: name 
         type: TextInput
         required: true 
         properties:
-          title: Name & Surname
+          title: Name
+          size: large
+      - id: surname 
+        type: TextInput
+        required: true 
+        properties:
+          title: Surname
           size: large
       - id: RSA ID / PASSPORT NUMBER 
         type: TextInput
@@ -78,15 +75,50 @@ blocks:
             - Male
             - Female
             - Other
+      - id: seperator2
+        type: Divider 
+      - id: submit_form.date
+        type: DateTimeSelector
+        layout:
+        properties:
+          title: Select the Date
       - id: Temp (C)
         type: TextInput
         layout:
-          span: 14
+          span: 8 
         properties:
-          placeholder: Temp below 37'C required for entry
           label:
-            span: 5
             inline: true
+      - id: symptoms
+        type: CheckboxSelector
+        properties:
+          options:
+            - label: Cough
+              value: 1
+              disabled: false
+            - label: Shortness of breath
+              value: 2
+              disabled: false
+            - disabled: false
+              label: Sore Throat
+              value: 3
+            - disabled: false
+              label: Current Fever
+              value: 4
+            - disabled: false
+              label: Body Aches
+              value: 5
+          title: Symptoms (check all those that apply)
+      - id: seperator3
+        type: Divider 
+      - id: submit_form.status
+        type: RadioSelector
+        properties:
+          label:
+            colon: true             
+          title: I acknowledge that the information I've given is accurate and complete
+          options:
+            - I agree
       - id: submit
         type: Button
         style:

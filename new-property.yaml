@@ -22,7 +22,7 @@ blocks:
           textAlign: center
           paddingTop: 20
         properties:
-          content: Add a new building to your property portfolio 
+          content: Add a new property to your portfolio
           level: 1  
       - id: tenant intro page
         type: Title
@@ -110,7 +110,7 @@ blocks:
           span: 12
       - id: Property GLA
         type: TextInput
-        required: true  
+        required: false  
         properties:
           title: Property GLA 
           size: large

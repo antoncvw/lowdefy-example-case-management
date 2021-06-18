@@ -1,23 +1,32 @@
 name: 'lowdefy-example-case-management'
-lowdefy: '3.10.1'
+lowdefy: '3.15.0'
 licence: MIT
 
 connections:
+  - id: buildings
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MDB
+      databaseName: facilities
+      collection: buildings
+      read: true
+      write: true
   - id: staff_register
     type: MongoDBCollection
     properties:
       databaseUri:
-        _secret: mongodb
-      databaseName: GreenBuild
-      collection: staff
+        _secret: MDB
+      databaseName: facilities
+      collection: staff_register
       read: true
       write: true
   - id: staff_attendance
     type: MongoDBCollection
     properties:
       databaseUri:
-        _secret: mongodb
-      databaseName: GreenBuild
+        _secret: MDB
+      databaseName: facilities
       collection: staff_attendance
       read: true
       write: true    
@@ -25,15 +34,15 @@ connections:
     type: MongoDBCollection
     properties:
       databaseUri:
-        _secret: EXAMPLES_MDB
-      databaseName: example-case-management
+        _secret: MDB
+      databaseName: facilities
       collection: tickets
       write: true
   - id: properties
     type: MongoDBCollection
     properties: 
       databaseUri:
-        _secret: acvanwyk
+        _secret: MDB
       databaseName: TOLMAYVANWYK
       collection: GRENTON_PROPERTIES
       write: true
@@ -46,37 +55,39 @@ menus:
         pageId: new-user-welcome
         properties:
           icon: AlertOutlined
-          title: Welcome    
+          title: Welcome
+           
+      - id: staff-page
+        type: MenuLink
+        pageId: staff-page
+        properties:
+          icon: ProfileFilled
+          title: Staff Page 
       - id: tickets
         type: MenuLink
         pageId: tickets
         properties:
           icon: ProfileOutlined
-          title: Tickets
+          title: Tickets  
       - id: new-ticket
         type: MenuLink
         pageId: new-ticket
         properties:
           icon: AlertOutlined
           title: New Ticket
-      - id: covidmenu
-        type: MenuLink
-        pageId: covidcapture
-        properties:
-          icon: AlertOutlined
-          title: Covid Capture Form
       - id: newproperty
         type: MenuLink
         pageId: new-property
         properties:
-          icon: AlertOutlined
-          title: Load New Property
-      - id: staff-page
+          icon: HomeOutlined
+          title: New Property
+      - id: covidmenu
         type: MenuLink
-        pageId: staff-page
+        pageId: covidcapture
         properties:
-          icon: AlertOutlined
-          title: Staff Page
+          icon: MedicineBoxFilled
+          title: Covid Capture Form
+
 
 global:
   statuses:
@@ -130,6 +141,104 @@ pages:
   - _ref: new-user-welcome.yaml
   - _ref: new-property.yaml
   - _ref: staff-page.yaml
+  - id: new
+    type: PageHeaderMenu
+    properties:
+      a: 
+        _log:
+          _state: true
+
+    requests:
+      - id: get_buildings
+        type: MongoDBAggregation
+        connectionId: buildings
+        properties:
+          pipeline:
+            - $match: {}
+      - id: get_total
+        type: MongoDBAggregation
+        connectionId: buildings
+        properties:
+          pipeline:
+            - $group:
+                _id: 0
+                total_price: 
+                  $sum: $price 
+      - id: save_item
+        type: MongoDBInsertOne
+        connectionId: buildings
+        properties:
+          doc:
+            price:
+              _state: price
+            name:
+              _state: name
+    events:
+      onEnter:
+        - id: get_data
+          type: Request
+          params: 
+            - get_buildings
+            - get_total
+        - id: set_it
+          type: SetState
+          params:
+            req:
+              _request: get_buildings
+    blocks:
+      - id: heading
+        type: Title
+        properties:
+          content: Hello new page
+      - id: form  
+        type: Card
+        blocks:
+          - id: name
+            type: TextInput
+            required: true
+            properties:
+              title: Name of stock item
+          - id: price 
+            type: NumberInput
+            required: true
+            properties:
+              title: How much does this cost?
+          - id: Save
+            type: Button
+            events:
+              onClick:
+                - id: save_data
+                  type: Request
+                  params: save_item
+                - id: get_data
+                  type: Request
+                  params: 
+                    - get_buildings
+                    - get_total
+      - id: show_data
+        type: Markdown
+        properties:
+          content: 
+            _nunjucks:
+              template: |
+                ### {{ title }} with total R {{ total }}
+
+                {% for item in data %}- {{ item.name }} = R {{ (item.price or 0).toFixed(2) }}
+                {% endfor %}
+              on:
+                title: All my data
+                total:
+                  _get:
+                    key: 0.total_price
+                    from:
+                      _request: get_total
+                data:
+                  _request: get_buildings
+      
+
+
+
+
 
 
 

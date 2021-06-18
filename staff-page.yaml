@@ -199,7 +199,6 @@ blocks:
           icon: DeleteOutlined
           type: danger
           block: true
-
   - id: add_staff_book_modal
     type: Modal
     actions:
