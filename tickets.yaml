@@ -8,23 +8,20 @@ properties:
 layout:
   contentGutter: 16
 
+requests:
+  # - _ref: requests/change_status_on_ticket.yaml
+  # - _ref: requests/close_ticket.yaml
+  # - _ref: requests/comment_on_ticket.yaml
+  # - _ref: requests/escalate_ticket.yaml
+  - _ref: requests/fetch_tickets.yaml
+  # - _ref: requests/fetch_selected.yaml
+  # - _ref: requests/set_flagged.yaml
+
 events:
   onEnter:
     _ref: actions/onEnter.yaml
   onEnterAsync:
     _ref: actions/onEnterAsync.yaml
-
-requests:
-  # Requests and actions are written in the requests/actions directories and referenced
-  # to make the files easier to read.
-  # They could also be used on multiple pages then.
-  - _ref: requests/change_status_on_ticket.yaml
-  - _ref: requests/close_ticket.yaml
-  - _ref: requests/comment_on_ticket.yaml
-  - _ref: requests/escalate_ticket.yaml
-  - _ref: requests/fetch_tickets.yaml
-  - _ref: requests/fetch_selected.yaml
-  - _ref: requests/set_flagged.yaml
 
 areas:
   header:
@@ -62,7 +59,7 @@ blocks:
           properties:
             lines: 1
         properties:
-          content: "###### Tickets"
+          content: '###### Tickets'
       - id: search_box
         type: Box
         layout:
@@ -145,8 +142,7 @@ blocks:
           options:
             - Open
             - Closed
-          size:
-            small
+          size: small
         events:
           onChange:
             _ref: actions/fetch_tickets.yaml
@@ -317,7 +313,7 @@ blocks:
           properties:
             lines: 1
         properties:
-          content: "###### Selected"
+          content: '###### Selected'
       - id: selected.card
         type: Card
         style:
@@ -521,7 +517,7 @@ blocks:
                       - id: selected.satisfaction_title
                         type: Markdown
                         properties:
-                          content: "###### Satisfaction score"
+                          content: '###### Satisfaction score'
                       - id: selected.satisfaction_score
                         type: Progress
                         properties:
@@ -534,7 +530,7 @@ blocks:
                       - id: selected.satisfaction_title
                         type: Markdown
                         properties:
-                          content: "###### Past orders"
+                          content: '###### Past orders'
                       - id: selected.past_orders
                         type: Statistic
                         properties:
@@ -634,7 +630,7 @@ blocks:
         style:
           marginBottom: 16px
         properties:
-          content: "#### Change Status"
+          content: '#### Change Status'
       - id: selected.change_status_selector
         type: Selector
         required: true
@@ -680,7 +676,7 @@ blocks:
         style:
           marginBottom: 16px
         properties:
-          content: "#### Comment"
+          content: '#### Comment'
       - id: selected.comment_input
         type: TextArea
         required: true
@@ -721,7 +717,7 @@ blocks:
         style:
           marginBottom: 16px
         properties:
-          content: "#### Escalate ticket"
+          content: '#### Escalate ticket'
       - id: selected.escalate_comment
         type: TextArea
         required: true
@@ -756,4 +752,4 @@ blocks:
       - id: selected.confirm_close_modal_text
         type: Markdown
         properties:
-          content: "#### Are you sure you want to close this issue?"
+          content: '#### Are you sure you want to close this issue?'

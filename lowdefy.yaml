@@ -29,7 +29,7 @@ connections:
       databaseName: facilities
       collection: staff_attendance
       read: true
-      write: true    
+      write: true
   - id: tickets
     type: MongoDBCollection
     properties:
@@ -40,7 +40,7 @@ connections:
       write: true
   - id: properties
     type: MongoDBCollection
-    properties: 
+    properties:
       databaseUri:
         _secret: MDB
       databaseName: TOLMAYVANWYK
@@ -56,25 +56,31 @@ menus:
         properties:
           icon: AlertOutlined
           title: Welcome
-           
+      - id: tickets
+        type: MenuGroup
+        properties:
+          title: Tickets
+        links:
+          - id: tickets
+            type: MenuLink
+            pageId: tickets
+            properties:
+              icon: ProfileOutlined
+              title: Tickets
+          - id: new-ticket
+            type: MenuLink
+            pageId: new-ticket
+            properties:
+              icon: AlertOutlined
+              title: New Ticket
+
       - id: staff-page
         type: MenuLink
         pageId: staff-page
         properties:
           icon: ProfileFilled
-          title: Staff Page 
-      - id: tickets
-        type: MenuLink
-        pageId: tickets
-        properties:
-          icon: ProfileOutlined
-          title: Tickets  
-      - id: new-ticket
-        type: MenuLink
-        pageId: new-ticket
-        properties:
-          icon: AlertOutlined
-          title: New Ticket
+          title: Staff Page
+
       - id: newproperty
         type: MenuLink
         pageId: new-property
@@ -87,7 +93,6 @@ menus:
         properties:
           icon: MedicineBoxFilled
           title: Covid Capture Form
-
 
 global:
   statuses:
@@ -144,7 +149,7 @@ pages:
   - id: new
     type: PageHeaderMenu
     properties:
-      a: 
+      a:
         _log:
           _state: true
 
@@ -162,8 +167,8 @@ pages:
           pipeline:
             - $group:
                 _id: 0
-                total_price: 
-                  $sum: $price 
+                total_price:
+                  $sum: $price
       - id: save_item
         type: MongoDBInsertOne
         connectionId: buildings
@@ -177,7 +182,7 @@ pages:
       onEnter:
         - id: get_data
           type: Request
-          params: 
+          params:
             - get_buildings
             - get_total
         - id: set_it
@@ -190,7 +195,7 @@ pages:
         type: Title
         properties:
           content: Hello new page
-      - id: form  
+      - id: form
         type: Card
         blocks:
           - id: name
@@ -198,7 +203,7 @@ pages:
             required: true
             properties:
               title: Name of stock item
-          - id: price 
+          - id: price
             type: NumberInput
             required: true
             properties:
@@ -212,13 +217,13 @@ pages:
                   params: save_item
                 - id: get_data
                   type: Request
-                  params: 
+                  params:
                     - get_buildings
                     - get_total
       - id: show_data
         type: Markdown
         properties:
-          content: 
+          content:
             _nunjucks:
               template: |
                 ### {{ title }} with total R {{ total }}
@@ -234,11 +239,3 @@ pages:
                       _request: get_total
                 data:
                   _request: get_buildings
-      
-
-
-
-
-
-
-
